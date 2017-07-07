@@ -1,0 +1,1092 @@
+FORMAT: 1A
+HOST: http://api.openedge.com/
+
+# Open Edge API
+The Open Edge API
+
+Overarching design concepts
+HATEOAS -  Hypermedia As The Engine Of Application State
+
+This is the vision for our HATEOAS designed API
+
+A developer should be able to start with one endpoint onlyh and using curl only discover it's complete use.
+
+the beginning endpoint is api.openedge.com
+
+Both reference links and json-ld comprise the backbone of HATEOAS, both of the concepts will be used.
+
+# Group Credit Card Transactions 
+Credit card transactions methods
+
+## Credit Card Purchase  [POST /v2/transaction/cc/purchase]
+
+- Request (application/json)
+
+    - Body
+    
+            {
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "number" : 4111111111111111,
+                    "verification_value" : 222,
+                    "track_data" : "",
+                    "brand" : "visa"
+                },
+                "gateway_info" : {
+                    "api_login" : "123456789012",
+                    "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                    "duplicate_mode" : "off"
+                },
+                "options" : {
+                    "billing_address" : {
+                        "name" : "Max Johnson",
+                        "company" : "High Tech Inc.",
+                        "address1" : "236 Juniper Dr",
+                        "address2" : "",
+                        "city" : "Pensecola",
+                        "state" : "Ohio",
+                        "country" : "USA"
+                    },
+                    "shipping_address" : {
+                        "name" : "Max Johnson",
+                        "company" : "High Tech Inc.",
+                        "address1" : "236 Juniper Dr",
+                        "address2" : "",
+                        "city" : "Pensecola",
+                        "state" : "Ohio",
+                        "country" : "USA"
+                    },
+                    "merchant_info" : {
+                        "order_id" : 123456789,
+                        "ip" : 172.217.9.5,
+                        "invoice" : 123456789,
+                        "merchant_id" : 123456789
+                    }
+                }
+            }
+        
+
+- Response 201 (application/json)
+
+    - Headers
+
+            Location: /v2/transaction/cc/purchase
+
+    - Body
+
+            {
+                "url": "/v2/transaction/cc/purchase",
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+            
+## Credit Card Purchase  [PUT /v2/transaction/cc/purchase/{transaction_id}]
+
+- Parameters
+    - transaction_id: 12234567891011 (required, integer) 
+
+- Request (application/json)
+
+        {
+            "money": {
+                "amount": 16.45,
+                "currency" : "usd"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            }
+        }
+
+- Response 200 (application/json)
+
+    - Headers
+
+            Location: /v2/transaction/cc/purchase
+
+    - Body
+
+            {
+                "url": "/v2/transaction/cc/purchase",
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+## Credit Card Authorization  [POST /v2/transaction/cc/auth]
+
+- Request (application/json)
+
+        {
+            "money": {
+                "amount": 12.45,
+                "currency" : "usd"
+            },
+            "card" : {
+                "first_name" : "Max",
+                "last_name" : "Johnson",
+                "month" : 03,
+                "year" : 2018,
+                "number" : 4111111111111111,
+                "verification_value" : 222,
+                "track_data" : "",
+                "brand" : "visa"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            },
+            "options" : {
+                "billing_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "shipping_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "merchant_info" : {
+                    "order_id" : 123456789,
+                    "ip" : 172.217.9.5,
+                    "invoice" : 123456789,
+                    "merchant_id" : 123456789
+                }
+            }
+        }
+
+- Response 201 (application/json)
+
+    - Headers
+
+            Location: /v2/transaction/cc/auth
+
+    - Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+            
+## Credit Card Capture  [POST /v2/transaction/cc/capture/{transaction_id}]
+
+- Parameters
+    - transaction_id: 12234567891011 (required, integer) 
+
+- Request (application/json)
+
+        {
+            "money": {
+                "amount": 16.45,
+                "currency" : "usd"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            }
+        }
+
+- Response 200 (application/json)
+
+    - Headers
+
+            Location: /v2/transaction/cc/capture
+
+    - Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+            
+## Credit Card Refund  [POST /v2/transaction/cc/refund/{transaction_id}]
+
+- Parameters
+    - transaction_id: 12234567891011 (required, integer) 
+
+- Request (application/json)
+
+        {
+            "money": {
+                "amount": 16.45,
+                "currency" : "usd"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            }
+        }
+
+- Response 200 (application/json)
+
+    - Headers
+
+            Location: /v2/transaction/cc/refund
+
+    - Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+## Credit Card Void  [POST /v2/transaction/cc/void/{transaction_id}]
+
+- Parameters
+    - transaction_id: 12234567891011 (required, integer) 
+
+- Request (application/json)
+
+        {
+            "money": {
+                "amount": 16.45,
+                "currency" : "usd"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            }
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/cc/void
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+# Group Debit Card Transactions 
+Debit card transaction methods
+
+## Debit Card Purchase  [POST /v2/transaction/debit/purchase]
+            
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 12.45,
+                "currency" : "usd"
+            },
+            "card" : {
+                "first_name" : "Max",
+                "last_name" : "Johnson",
+                "month" : 03,
+                "year" : 2018,
+                "number" : 4111111111111111,
+                "verification_value" : 222,
+                "track_data" : "",
+                "brand" : "visa"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            },
+            "options" : {
+                "billing_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "shipping_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "merchant_info" : {
+                    "order_id" : 123456789,
+                    "ip" : 172.217.9.5,
+                    "invoice" : 123456789,
+                    "merchant_id" : 123456789
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/debit/purchase
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+## Debit Card Refund  [POST /v2/transaction/debit/refund/{transaction_id}]
+            
++ Parameters
+    + transaction_id: 12234567891011 (required, integer) 
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 16.45,
+                "currency" : "usd"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            }
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/debit/purchase
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+## Debit Card Void  [POST /v2/transaction/debit/void/{transaction_id}]
+            
++ Parameters
+    + transaction_id: 12234567891011 (required, integer) 
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 16.45,
+                "currency" : "usd"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            }
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/debit/purchase
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+# Group EBT Card Transactions 
+Methods for electronic benefits transactions
+
+
+## EBT Card Purchase  [POST /v2/transaction/ebt/purchase]
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 12.45,
+                "currency" : "usd"
+            },
+            "card" : {
+                "first_name" : "Max",
+                "last_name" : "Johnson",
+                "month" : 03,
+                "year" : 2018,
+                "number" : 4111111111111111,
+                "verification_value" : 222,
+                "track_data" : "",
+                "brand" : "visa"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            },
+            "options" : {
+                "billing_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "shipping_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "merchant_info" : {
+                    "order_id" : 123456789,
+                    "ip" : 172.217.9.5,
+                    "invoice" : 123456789,
+                    "merchant_id" : 123456789
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/ebt/purchase
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+## EBT Card Return  [POST /v2/transaction/ebt/return/{transaction_id}]
+            
++ Parameters
+    + transaction_id: 12234567891011 (required, integer) 
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 16.45,
+                "currency" : "usd"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            }
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/ebt/return
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+## EBT Card Clear Voucher  [POST /v2/transaction/ebt/clear_voucher/{transaction_id}]
+            
++ Parameters
+    + transaction_id: 12234567891011 (required, integer) 
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 16.45,
+                "currency" : "usd"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            }
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/ebt/return
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+# Group Gift Card Transactions 
+Gift card transaction methods
+
+## Gift Card Purchase  [POST /v2/transaction/gift/purchase]
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 12.45,
+                "currency" : "usd"
+            },
+            "card" : {
+                "first_name" : "Max",
+                "last_name" : "Johnson",
+                "month" : 03,
+                "year" : 2018,
+                "number" : 4111111111111111,
+                "verification_value" : 222,
+                "track_data" : "",
+                "brand" : "visa"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            },
+            "options" : {
+                "billing_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "shipping_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "merchant_info" : {
+                    "order_id" : 123456789,
+                    "ip" : 172.217.9.5,
+                    "invoice" : 123456789,
+                    "merchant_id" : 123456789
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/cc/purchase
+
+    + Body
+
+            {
+                "url": "/v2/transaction/cc/purchase",
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+
+# Group Check Transactions 
+Check/ach transaction methods
+
+## Check Purchase  [POST /v2/transaction/check/purchase]
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 12.45,
+                "currency" : "usd"
+            },
+            "card" : {
+                "first_name" : "Max",
+                "last_name" : "Johnson",
+                "month" : 03,
+                "year" : 2018,
+                "number" : 4111111111111111,
+                "verification_value" : 222,
+                "track_data" : "",
+                "brand" : "visa"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            },
+            "options" : {
+                "billing_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "shipping_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "merchant_info" : {
+                    "order_id" : 123456789,
+                    "ip" : 172.217.9.5,
+                    "invoice" : 123456789,
+                    "merchant_id" : 123456789
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/cc/purchase
+
+    + Body
+
+            {
+                "url": "/v2/transaction/cc/purchase",
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+
+# Group Tokenization 
+Tokenizing a credit card methods
+
+## Tokenize Credit Card  [POST /v2/transaction/tokenize]
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 12.45,
+                "currency" : "usd"
+            },
+            "card" : {
+                "first_name" : "Max",
+                "last_name" : "Johnson",
+                "month" : 03,
+                "year" : 2018,
+                "number" : 4111111111111111,
+                "verification_value" : 222,
+                "track_data" : "",
+                "brand" : "visa"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            },
+            "options" : {
+                "billing_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "shipping_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "merchant_info" : {
+                    "order_id" : 123456789,
+                    "ip" : 172.217.9.5,
+                    "invoice" : 123456789,
+                    "merchant_id" : 123456789
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/cc/tokenize
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+
+# Group Recurring Payments 
+
+## Recurring Payment  [POST /v2/transaction/recurring]
+
++ Request (application/json)
+
+        {
+            "money": {
+                "amount": 12.45,
+                "currency" : "usd"
+            },
+            "card" : {
+                "first_name" : "Max",
+                "last_name" : "Johnson",
+                "month" : 03,
+                "year" : 2018,
+                "number" : 4111111111111111,
+                "verification_value" : 222,
+                "track_data" : "",
+                "brand" : "visa"
+            },
+            "gateway_info" : {
+                "api_login" : "123456789012",
+                "api_password" : "UfHjHCcd3x1ERZE0xcg76XHBJcJU425h".
+                "duplicate_mode" : "off"
+            },
+            "options" : {
+                "billing_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "shipping_address" : {
+                    "name" : "Max Johnson",
+                    "company" : "High Tech Inc.",
+                    "address1" : "236 Juniper Dr",
+                    "address2" : "",
+                    "city" : "Pensecola",
+                    "state" : "Ohio",
+                    "country" : "USA"
+                },
+                "merchant_info" : {
+                    "order_id" : 123456789,
+                    "ip" : 172.217.9.5,
+                    "invoice" : 123456789,
+                    "merchant_id" : 123456789
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v2/transaction/recurring
+
+    + Body
+
+            {
+                "transaction_id": 12234567891011,
+                "transaction_status: {
+                    "approval_code" : "ADB123",
+                    "avs" : "Y",
+                    "card_response : "M"
+                },
+                "money": {
+                    "amount": 12.45,
+                    "currency" : "usd"
+                },
+                "card" : {
+                    "first_name" : "Max",
+                    "last_name" : "Johnson",
+                    "month" : 03,
+                    "year" : 2018,
+                    "masked_number" : XXXXXXXXXXXXX1111,
+                    "brand" : "visa"
+                },
+            }
+
+# Group Typical Transaction Responses 
+
+- 200 `OK` - The request was successful (some API calls may return 201 instead).
+- 201 `Created` - The request was successful and a transaction was created.
+- 204 `No Content` - The request was successful but there is no representation to return (that is, the response is empty).
+- 401 `Unauthorized` - Authentication failed or user does not have permissions for the requested operation.
+- 403 `Forbidden` - Access denied.
+- 404 `Not Found` - Resource was not found.
+- 405 `Method Not Allowed` - Requested method is not supported for the specified resource.
+- 422 `Bad Request` - The request could not be understood or was missing required parameters.
+- 503 `Service Unavailable` - The service is temporary unavailable. Try again later.
